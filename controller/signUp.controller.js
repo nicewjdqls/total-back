@@ -3,23 +3,25 @@ const { connection } = require('../model/Task');
 
 // 회원가입
 async function signUpUser(req, res) {
-    const { user_id, user_pw, user_name, user_phone, user_birthDate } = req.body;
+    const { userId, userPw, userName, userPhone, userBirthDate } = req.body;
 
     // 유효성 검사
-    if (!user_id || !user_pw || !user_name || !user_phone || !user_birthDate) {
+    if (!userId || !userPw || !userName || !userPhone || !userBirthDate) {
+        console.log(req.body);
+        console.log(data);
         return res.status(400).json({ success: false, message: '빈칸을 다 채워주세요' });
     }
 
     // 비밀번호 암호화
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
-    const hashedPw = await bcrypt.hash(user_pw, saltRounds);
+    const hashedPw = await bcrypt.hash(userPw, saltRounds);
 
-    const birthDate = new Date(user_birthDate).toISOString().split('T')[0]; // 'YYYY-MM-DD' 포맷으로 변환
+    const birthDate = new Date(userBirthDate).toISOString().split('T')[0]; // 'YYYY-MM-DD' 포맷으로 변환
 
     // 데이터베이스에 사용자 추가
-    const query = 'INSERT INTO member (user_id, user_pw, name, phone, birth, created_at) VALUES (?, ?, ?, ?, ?, NOW())';
-    const values = [user_id, hashedPw, user_name, user_phone, birthDate];
+    const query = 'INSERT INTO member (userId, userPw, userName, userPhone, userBirthDate, created_at) VALUES (?, ?, ?, ?, ?, NOW())';
+    const values = [userId, hashedPw, userName, userPhone, birthDate];
 
     connection.query(query, values, (error, results) => {
         if (error) {
@@ -34,7 +36,7 @@ async function signUpUser(req, res) {
 async function checkIdUser(req, res) {
     const { id } = req.params;
 
-    const query = 'SELECT user_id FROM member WHERE user_id = ?';
+    const query = 'SELECT userId FROM member WHERE userId = ?';
     connection.query(query, [id], (error, results) => {
         if (error) {
             console.error('중복 체크 오류:', error);
