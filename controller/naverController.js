@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); 
 const { connection } = require('../model/Task.js');
 
 const client_id = "FyxxfOYI_FhhmiKnjTHH";

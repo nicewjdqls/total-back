@@ -1,5 +1,5 @@
 const { connection } = require('../model/Task');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); 
 
 //비밀번호 변경-내정보 수정
 async function ChangeMyPagePW(req, res) {

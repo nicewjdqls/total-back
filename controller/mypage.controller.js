@@ -1,5 +1,5 @@
 const { connection } = require('../model/Task');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); // bcrypt 대신 bcryptjs를 사용
 
 // 사용자의 정보를 조회하는 비동기 함수
 async function reservemypage(req, res) {

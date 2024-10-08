@@ -1,5 +1,5 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); // bcrypt 대신 bcryptjs를 사용
 const session = require('express-session');
 const { connection } = require('../model/Task');
 const requestIp = require('request-ip');
@@ -9,7 +9,6 @@ async function loginUser(req, res) {
     const ip = requestIp.getClientIp(req); // IP 주소 추출
 
     try {
-        // user_id를 userId로 변경
         const query = "SELECT userPw, userName FROM member WHERE userId = ?";
         connection.query(query, [userId], async (error, results) => {
             if (error) {

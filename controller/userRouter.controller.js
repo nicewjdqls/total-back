@@ -1,5 +1,5 @@
 const { connection } = require('../model/Task');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs'); 
 
 // 날짜 형식 변환 함수
 function convertDateFormat(dateString) {
