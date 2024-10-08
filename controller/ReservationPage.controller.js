@@ -3,11 +3,12 @@ const { connection } = require('../model/Task');
 async function reservation(req, res) {
     console.log(req.body);
     try {
-        const { userId, sitNum, reserveDate, startTime, endTime } = req.body;
+        const { userId, sitNum, reserveDate, chargeTime } = req.body;
 
-        // 시작 시간과 종료 시간을 reserveDate와 결합하여 full datetime으로 변환
-        const startDateTime = `${reserveDate} ${startTime}`;
-        const endDateTime = `${reserveDate} ${endTime}`;
+        // 시작 시간과 종료 시간 계산
+        const startDateTime = new Date(reserveDate);
+        const endDateTime = new Date(startDateTime);
+        endDateTime.setHours(endDateTime.getHours() + chargeTime); // chargeTime에 따라 종료 시간 설정
 
         // 예약이 겹치는지 확인하는 쿼리
         const checkQuery = `
@@ -30,7 +31,7 @@ async function reservation(req, res) {
         `;
 
         // 데이터 삽입
-        await connection.promise().query(query, [userId, sitNum, reserveDate, startDateTime, endDateTime]);
+        await connection.promise().query(query, [userId, sitNum, reserveDate, startDateTime.toISOString().slice(0, 19).replace('T', ' '), endDateTime.toISOString().slice(0, 19).replace('T', ' ')]);
 
         // 성공 응답
         return res.status(200).json({ success: true, message: "성공" });

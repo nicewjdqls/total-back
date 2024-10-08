@@ -10,8 +10,10 @@ const { connection } = require('./model/Task');
 const app = express();
 
 // CORS 설정
-app.use(cors());
-
+app.use(cors({
+    origin: 'http://localhost:3000',  // React 앱의 URL
+    credentials: true,                 // 인증 정보 포함 요청 허용
+}));
 // 세션 설정
 app.use(session({
     secret: 'secret_key', // 비밀키

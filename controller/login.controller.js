@@ -32,8 +32,9 @@ async function loginUser(req, res) {
             req.session.user = { id: userId, name: user.userName };
 
             // 로그인 기록 저장
-            const historyQuery = "INSERT INTO login_history (user_id, ip_address, history) VALUES (?, ?, CURRENT_TIMESTAMP)";
-            connection.query(historyQuery, [userId, ip], (historyError) => {
+            const historyQuery = 'INSERT INTO login_history (userId, userType, ip_address) VALUES (?, ?, ?)';
+            const userType = 'member'; // 사용자 유형 설정
+            connection.query(historyQuery, [userId, userType, ip], (historyError) => {
                 if (historyError) {
                     console.error("로그인 기록 저장 오류", historyError);
                 }
@@ -46,4 +47,5 @@ async function loginUser(req, res) {
         res.status(500).json({ message: "Login failed" });
     }
 }
+
 module.exports = { loginUser };
