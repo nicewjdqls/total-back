@@ -54,6 +54,7 @@ async function cancelReservation(req, res) {
         `;
 
         connection.query(query, [userId, formattedReserveDate, formattedStartTime, formattedEndTime, sitNum], (error, results) => {
+            console.log('Received data:', req.body.results);
             if (error) {
                 console.error('예약 취소 중 오류 발생:', error);
                 return res.status(500).json({ message: '서버 오류가 발생했습니다.', error: error.message });

@@ -111,8 +111,38 @@ async function getUser(userId) {
         });
     });
 }
+async function deleteAccount(req, res) {
+    const { userId } = req.body;
+
+    try {
+        // 쿼리 정의: 두 테이블에서 userId를 삭제
+        const query = `
+            DELETE FROM member WHERE userId = ?
+            OR userId IN (SELECT userId FROM snsmember WHERE userId = ?)
+        `;
+        const values = [userId, userId];
+
+        connection.query(query, values, (error, results) => {
+            if (error) {
+                console.error("회원 탈퇴 오류", error);
+                return res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
+            }
+            if (results.affectedRows > 0) {
+                // 삭제 성공
+                return res.json({ success: true, message: '회원 탈퇴가 완료되었습니다.' });
+            } else {
+                // 해당 사용자가 존재하지 않을 때
+                return res.json({ success: false, message: '해당 사용자가 존재하지 않습니다.' });
+            }
+        });
+    } catch (error) {
+        console.error("회원 탈퇴 중 오류 발생:", error);
+        return res.status(500).json({ success: false, message: "서버 오류가 발생했습니다." });
+    }
+}
 
 module.exports = {
     reservemypage,
-    myPageRequest
+    myPageRequest,
+    deleteAccount
 };
